@@ -1,0 +1,58 @@
+defaults:
+    - agent: sac
+    
+# this needs to be specified manually
+experiment: PEBBLE
+
+# reward learning
+segment: 50
+activation: tanh
+num_seed_steps: 1000
+num_unsup_steps: 5000
+num_interact: 5000
+reward_lr: 0.0003
+reward_batch: 128
+reward_update: 200
+feed_type: 0
+reset_update: 100
+topK: 5
+ensemble_size: 3
+max_feedback: 1400
+large_batch: 10
+label_margin: 0.0
+teacher_beta: -1
+teacher_gamma: 1
+teacher_eps_mistake: 0
+teacher_eps_skip: 0
+teacher_eps_equal: 0
+
+# scheduling
+reward_schedule: 0
+
+num_train_steps: 1e6
+replay_buffer_capacity: ${num_train_steps}
+
+# evaluation config
+eval_frequency: 10000
+num_eval_episodes: 10
+device: cuda
+
+# logger
+log_frequency: 10000
+log_save_tb: true
+
+# video recorder
+save_video: false
+
+# setups
+seed: 1
+
+# Environment
+env: dog_stand
+gradient_update: 1
+
+# hydra configuration
+hydra:
+    name: ${env}
+    run:
+        dir: ./exp/${env}/H${diag_gaussian_actor.params.hidden_dim}_L${diag_gaussian_actor.params.hidden_depth}_lr${agent.params.actor_lr}/teacher_b${teacher_beta}_g${teacher_gamma}_m${teacher_eps_mistake}_s${teacher_eps_skip}_e${teacher_eps_equal}/label_smooth_${label_margin}/schedule_${reward_schedule}/${experiment}_init${num_seed_steps}_unsup${num_unsup_steps}_inter${num_interact}_maxfeed${max_feedback}_seg${segment}_act${activation}_Rlr${reward_lr}_Rbatch${reward_batch}_Rupdate${reward_update}_en${ensemble_size}_sample${feed_type}_large_batch${large_batch}_seed${seed}
